@@ -249,7 +249,7 @@ const Contact = () => {
 
         {/* Floating LinkedIn button */}
         <a
-          href="https://www.linkedin.com/company/freight-wing"
+          href="https://www.linkedin.com/company/freight-wing-logistic-pvt-ltd/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Freight Wing on LinkedIn"
