@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Phone, Mail, MapPin, Send } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -15,23 +15,27 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((s) => ({ ...s, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Request Submitted!",
-      description: "We'll get back to you within 24 hours.",
-    });
-    
-    setFormData({ name: '', email: '', phone: '', company: '', message: '' });
-    setIsSubmitting(false);
+    try {
+      // Replace endpoint with your real API route if needed
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      toast({ title: 'Message sent', description: 'We will get back to you soon.' });
+      setFormData({ name: '', email: '', phone: '', company: '', message: '' });
+    } catch (err) {
+      toast({ title: 'Error', description: 'Failed to send message.', variant: 'destructive' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -216,6 +220,48 @@ const Contact = () => {
             </form>
           </div>
         </div>
+
+        <hr className="my-8" />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <h3 className="font-semibold">Branch Office - Pune</h3>
+            <p className="text-sm text-gray-700">
+              Purna Nagar Road, Office No-07, Osia Arcade opp Tata Motors, Chinchwad, Maharashtra 411019, IN
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold">Branch Office - Bhiwandi</h3>
+            <p className="text-sm text-gray-700">
+              Bhiwandi Kalher Road, Ofc No-B40, Paresh Complex Kalher, Bhiwandi, Maharashtra 421302, IN
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold">Branch Office - Ahmedabad</h3>
+            <p className="text-sm text-gray-700">
+              Office No. 302, 02 Number Office, Aniket Building, Near Girish Coldrink Cross Road, CG Road Ahmedabad,
+              Gujarat 380006, IN
+            </p>
+          </div>
+        </div>
+
+        {/* Floating LinkedIn button */}
+        <a
+          href="https://www.linkedin.com/company/freight-wing"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Freight Wing on LinkedIn"
+          className="fixed right-6 bottom-6 z-50 w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105"
+          style={{ backgroundColor: '#24354C' }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M4.98 3.5C4.98 4.88 3.86 6 2.48 6C1.1 6 0 4.88 0 3.5C0 2.12 1.12 1 2.5 1C3.88 1 4.98 2.12 4.98 3.5Z" fill="#F1B65D"/>
+            <path d="M.5 8.5H4.5V23.5H.5z" fill="#F1B65D"/>
+            <path d="M8.5 8.5H12.2V10.54H12.26C12.98 9.44 14.6 8.28 16.98 8.28C21.24 8.28 22 10.86 22 15.06V23.5H18V15.98C18 13.94 17.86 11.44 14.98 11.44C12.08 11.44 11.6 13.64 11.6 15.72V23.5H8.5z" fill="#F1B65D"/>
+          </svg>
+        </a>
       </div>
     </section>
   );
